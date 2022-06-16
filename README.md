@@ -5,6 +5,10 @@ Notify net state changes directly to your Redux store!
 
 ```
 npm install --save redux-enhancer-react-native-netstate
+
+OR
+
+yarn add redux-enhancer-react-native-netstate
 ```
 
 ## Usage
