@@ -1,10 +1,10 @@
-# redux-enhancer-react-native-appstate
-Connect your App State changes directly to your Redux store!
+# redux-enhancer-react-native-netstate
+Notify net state changes directly to your Redux store!
 
 ## Installation
 
 ```
-npm install --save redux-enhancer-react-native-appstate
+npm install --save redux-enhancer-react-native-netstate
 ```
 
 ## Usage
@@ -13,72 +13,30 @@ When you create your Redux store, add the enhancer:
 
 ```javascript
 import { createStore } from 'redux';
-import applyAppStateListener from 'redux-enhancer-react-native-appstate';
+import applyNetStateListener from 'redux-enhancer-react-native-netstate';
 
 ...
 
 const store = createStore(reducers, initalState, [
-  applyAppStateListener(),
+  applyNetStateListener(),
 ]);
 ```
 
-The store will now automatically dispatch app state related actions.
+The store will now automatically dispatch net state related actions.
 
 For instance, you can use it in a reducer:
 ```javascript
-import { FOREGROUND, BACKGROUND, INACTIVE } from 'redux-enhancer-react-native-appstate';
+import { ONLINE, OFFLINE } from 'redux-enhancer-react-native-netstate';
 
 function reducer(state = '', action) {
   switch (action.type) {
-    case FOREGROUND:
-      return 'back to foreground';
-    case BACKGROUND:
-      return 'background';
-    case INACTIVE:
-      return 'inactive';
+    case ONLINE:
+      return 'app is online';
+    case OFFLINE:
+      return 'app is offline';    
     default:
       return state
   }
 }
 ```
 
-### Usage with Redux Saga
-
-Make sure that this enhancer is applied before the saga middleware.
-Otherwise, your saga would not be able to intercept the actions.
-
-```javascript
-// good
-const store = createStore(reducers, initalState, composeEnhancers(
-  applyAppStateListener(),
-  applyMiddleware(sagaMiddleware)
-));
-
-// bad
-const store = createStore(reducers, initalState, composeEnhancers(
-  applyMiddleware(sagaMiddleware),
-  applyAppStateListener()
-));
-```
-
-Then you can define a saga like:
-
-```javascript
-import { takeLatest } from 'redux-saga/effects';
-import { FOREGROUND, BACKGROUND, INACTIVE } from 'redux-enhancer-react-native-appstate';
-
-function* appHasComeBackToForeground() {
-  // app has come back to foreground!
-}
-
-function* watchForAppBackToForeground() {
-  yield takeLatest(
-    FOREGROUND,
-    catchApiExceptions(appHasComeBackToForeground),
-  );
-}
-```
-
-## Contributing
-
-See [our contributing guidelines](https://bamlab.github.io/open-source/#contributing)
